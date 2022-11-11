@@ -1,0 +1,138 @@
+1. --Show the Supplier companyname, then Suppliers.supplierID, 
+--then Products.supplierID, then the productname. Order by SupplierID. 
+--Use JOIN and verify that the records match up appropriately.
+
+SELECT      SUPPLIERS.companyname,
+            SUPPLIERS.SupplierID,
+            products.supplierID,
+            products.productname
+from        products
+join        suppliers on products.supplierID = suppliers.supplierID
+order by    products.SupplierID,
+            suppliers.SupplierID
+
+2. --Show the Supplier Company Name, ProductName, and unitprice for all products. 
+--unitprice descending, then by productID.
+
+select   suppliers.CompanyName,   
+         products.productname,
+         products.unitprice
+FROM     Products
+join suppliers on products.supplierid = suppliers.SupplierID
+order by UnitPrice desc,
+         ProductID
+
+3.--Show the ProductID, ProductName, and Supplier Company Name of the supplier for all Products. 
+--Order by ProductID.
+
+select      products.ProductID,
+            products.ProductName,
+            suppliers.companyname
+FROM        Products
+join        suppliers on products.supplierid = suppliers.SupplierID
+order by    productID
+
+4. --For only discontinued products with non-zero unitsinstock, 
+--show the productID, productname, and Supplier companyname.
+
+select      Products.ProductID,
+            products.Productname,
+            suppliers.companyname
+from        products
+join        suppliers on products.supplierID = suppliers.supplierID
+where       products.unitsinstock > 0
+and         products.discontinued = 1
+order by    products.ProductID ASC
+
+5.--We need a report that tells us everything we need to place an order. 
+--This should be only non-discontinued products whose (unitsInstock + unitsOnOrder) 
+--is less than or equal to the Reorderlevel. As the final column, it should show how 
+--many to order. We usually order enough so that (unitsInStock+UnitsOnOrder) is equal 
+--to twice the reorderlevel. Columns should be SupplierID, CompanyName, companyphone, 
+--productID, productName, amount to order. 
+--Order by SupplierID, then by productID.
+
+select          suppliers.supplierid,
+                suppliers.companyname,
+                suppliers.phone as [company phone],
+                products.productID,
+                products.productname,
+                products.ReorderLevel*2-(products.unitsinstock+products.unitsonorder)
+as              [amount to Order]
+from            products
+join            suppliers on products.supplierid = suppliers.supplierid
+where           unitsinstock+unitsonorder <= ReorderLevel
+and             products.Discontinued = 0
+order by        suppliers.supplierid,
+                products.ProductID
+
+6.--Do # 5 again, but also add the cost, which will be the order amount 
+--multiplied by the unitprice.
+
+
+select          suppliers.supplierid,
+                suppliers.companyname,
+                suppliers.phone as [company phone],
+                products.productID,
+                products.productname,
+                products.ReorderLevel*2-(products.unitsinstock+products.unitsonorder)
+as              [amount to Order],
+                products.UnitPrice*(products.ReorderLevel*2-
+                (products.UnitsInStock+ products.UnitsOnOrder))
+AS              [cost]
+from            products
+join            suppliers on products.supplierid = suppliers.supplierid
+where           unitsinstock+unitsonorder <= ReorderLevel
+and             products.Discontinued = 0
+order by        suppliers.supplierid,
+                products.ProductID
+
+7.--(shifting to categories and products) Show the productID, 
+--productname, unitprice, and categoryname of all products.
+
+select      products.ProductID,
+            products.ProductName,
+            products.unitprice,
+            categories.CategoryName
+from        Products
+join        Categories on Products.CategoryID = Categories.CategoryID
+order by    products.ProductID
+
+8. --Show the categoryName, productID, productname, and unitprice of all products. 
+--Only show products whose inventory value is greater than $200.
+
+select          Categories.CategoryName,
+                products.productid,
+                products.UnitPrice
+from            Products
+join            categories on products.CategoryID = categories.CategoryID
+where           products.UnitPrice*products.UnitsInStock > $200
+order by        products.ProductID
+
+--9. Show the CategoryName, productID, productName, and supplierName of all products.
+-- Order columns from left to right.(Note this is a 3-table join.)
+
+select      categories.Categoryname,
+            products.ProductID,
+            products.Productname,
+            suppliers.CompanyName
+from        Products
+join        suppliers on products.SupplierID = suppliers.SupplierID
+join        categories on products.SupplierID = Categories.CategoryID
+order by    Products.ProductID
+
+--10.Show the SupplierName, CategoryName, ProductID, and 
+--productName of all products. Order columns from left to right.
+
+select      suppliers.companyname,
+            categories.CategoryName,
+            products.Productid,
+            Products.ProductName
+from        Products
+join        suppliers on products.SupplierID = suppliers.SupplierID
+join        Categories on products.CategoryID = Categories.CategoryID
+order by    Products.ProductID
+
+
+
+
