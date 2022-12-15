@@ -57,7 +57,22 @@ WHERE article = 'polo shirt'
 --5.select all shirts but only show article and color
 SELECT article, color
 FROM shirts 
-; 
+;
+--resetting last worn shirts
+UPDATE shirts 
+SET 
+    last_worn = 0
+WHERE
+    last_worn = 15
+;
+--resetting colors and shirt sizes
+UPDATE shirts 
+SET 
+    color = 'off white',
+    shirt_size = 'XS'
+WHERE
+    color = 'white'
+;
 --checking for accuracy
 SELECT *
 FROM shirts
